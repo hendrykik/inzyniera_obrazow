@@ -97,22 +97,6 @@ def reveal_message(image, nbits=1, length=0):
         message = message[:mod]
     return message
 
-# original_image = load_image("images/spanish.png")  # Wczytanie obrazka
-# message = "Stół z powymaławanymi nogami..." 
-# n = 1  # liczba najmłodszych bitów używanych do ukrycia wiadomości
-
-# message = encode_as_binary_array(message)  # Zakodowanie wiadomości jako ciąg 0 i 1
-# image_with_message = hide_message(original_image, message, n)  # Ukrycie wiadomości w obrazku
-
-# save_image("images/image_with_message.png", image_with_message)  # Zapisanie obrazka w formacie PNG
-
-# image_with_message_png = load_image("images/image_with_message.png")  # Wczytanie obrazka PNG
-
-# secret_message_png = decode_from_binary_array(
-#     reveal_message(image_with_message_png, nbits=n, length=len(message)))  # Odczytanie ukrytej wiadomości z PNG
-
-# print(secret_message_png)
-
 def hide_message_in_container(container, message, n):
     message = encode_as_binary_array(message)  # Zakodowanie wiadomości jako ciąg 0 i 1
     container_with_message = hide_message(container, message, n)  # Ukrycie wiadomości w kontenerze
@@ -123,27 +107,29 @@ def reveal_message_in_container(container_with_message, n, length):
     secret_message = decode_from_binary_array(reveal_message(container_with_message, nbits=n, length=length))  # Odczytanie ukrytej wiadomości
     return secret_message
 
+print("Wybierz opcje")
+print("1 - zapisz obraz z tekstem")
+print("2 - odkoduj obraz z tekstem")
+value = int(input())
+message = input("Podaj wiadomość:  ")
+n = int(input("Podaj na ilu ostatnich bitach zapisać/był zapisany tekst:  "))
+file = input("Podaj jak sie nazywa plik na który mamy zakodowac wiadomosc albo była zakodowana:  ")
 
-def zakoduj(img, mess, n):
-    original_image = load_image(img)  # Wczytanie obrazka
-    message = mess
+if(value == 1):
+    file_out = input("Podaj jak chcemy nazwac plik z zakodowana wiadomoscia:  ")
+    original_image = load_image(file)  # Wczytanie obrazka
+    #message = "Stół z powymaławanymi nogami." * 1
+    #n = 1  # liczba najmłodszych bitów używanych do ukrycia wiadomości
 
     message = encode_as_binary_array(message)  # Zakodowanie wiadomości jako ciąg 0 i 1
     image_with_message = hide_message(original_image, message, n)  # Ukrycie wiadomości w obrazku
 
-    save_image("images/image_with_message.png", image_with_message)  # Zapisanie obrazka w formacie PNG
+    save_image(file_out, image_with_message)  # Zapisanie obrazka w formacie PNG
 
-def dekoduj(img, message, n):
-    image_with_message_png = load_image("images/image_with_message.png")  # Wczytanie obrazka PNG
+if(value == 2):
+    image_with_message_png = load_image(file)  # Wczytanie obrazka PNG
 
     secret_message_png = decode_from_binary_array(
-        reveal_message(image_with_message_png, nbits=n, length=len(message)))  # Odczytanie ukrytej wiadomości z PNG
+        reveal_message(image_with_message_png, nbits=n, length=len(message)*8))  # Odczytanie ukrytej wiadomości z PNG
 
     print(secret_message_png)
-
-img = "images/spanish.png"
-mess = "Stół bez nóg"
-n = 1
-
-zakoduj(img, mess, n)
-dekoduj(img, mess, n)
