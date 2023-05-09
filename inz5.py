@@ -4,6 +4,7 @@ import numpy as np
 import binascii
 import cv2 as cv
 import math
+import os
 plt.rcParams["figure.figsize"] = (18,10)
 
 
@@ -111,15 +112,17 @@ print("Wybierz opcje")
 print("1 - zapisz obraz z tekstem")
 print("2 - odkoduj obraz z tekstem")
 value = int(input())
-message = input("Podaj wiadomość:  ")
 n = int(input("Podaj na ilu ostatnich bitach zapisać/był zapisany tekst:  "))
 file = input("Podaj jak sie nazywa plik na który mamy zakodowac wiadomosc albo była zakodowana:  ")
 
+if not os.path.isfile(file):
+    print("Nie ma takiego pliku")
+    exit(0)
+
 if(value == 1):
+    message = input("Podaj wiadomość:  ")
     file_out = input("Podaj jak chcemy nazwac plik z zakodowana wiadomoscia:  ")
     original_image = load_image(file)  # Wczytanie obrazka
-    #message = "Stół z powymaławanymi nogami." * 1
-    #n = 1  # liczba najmłodszych bitów używanych do ukrycia wiadomości
 
     message = encode_as_binary_array(message)  # Zakodowanie wiadomości jako ciąg 0 i 1
     image_with_message = hide_message(original_image, message, n)  # Ukrycie wiadomości w obrazku
@@ -127,9 +130,13 @@ if(value == 1):
     save_image(file_out, image_with_message)  # Zapisanie obrazka w formacie PNG
 
 if(value == 2):
+    len_mess = int(input("Podaj długosc wiadomosci:  "))
     image_with_message_png = load_image(file)  # Wczytanie obrazka PNG
 
     secret_message_png = decode_from_binary_array(
-        reveal_message(image_with_message_png, nbits=n, length=len(message)*8))  # Odczytanie ukrytej wiadomości z PNG
+        reveal_message(image_with_message_png, nbits=n, length=len_mess*8))  # Odczytanie ukrytej wiadomości z PNG
 
     print(secret_message_png)
+
+    value1 = input()
+
